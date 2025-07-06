@@ -146,6 +146,15 @@
       80% { transform: translate(4px, -1px); }
       100% { transform: translate(0, 0); }
     }
+    #vanta-forum {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  opacity: 0.2;
+}
+
   </style>
 </head>
 <body>
@@ -179,6 +188,8 @@
   <!-- Dashboard (after login) -->
 <!-- Dashboard (after login) -->
 <div id="dashboard">
+  <div id="vanta-forum"></div>
+
   <button id="logout-btn" onclick="logout()">⏏ Exit</button>
   <h2 id="welcome"></h2>
   <p>🔐 Welcome to the CODEBIN Pentester Forum</p>
@@ -212,6 +223,13 @@
   };
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth(), db = firebase.database();
+  VANTA.NET({
+    el: "#vanta-forum",
+    color: 0x00ff00,
+    backgroundColor: 0x000000,
+    points: 10.00,
+    maxDistance: 20.00,
+    spacing: 15.00
 </script>
   <script>
     VANTA.NET({
