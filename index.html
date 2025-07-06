@@ -332,6 +332,14 @@
         }
       });
     }
+    setTimeout(() => {
+  const title = document.getElementById('title');
+  title.style.opacity = 0;
+  setTimeout(() => {
+    title.style.display = 'none';
+    document.getElementById('form').style.display = 'flex';
+  }, 1000);
+}, 2000);
   </script>
 </body>
 </html>
