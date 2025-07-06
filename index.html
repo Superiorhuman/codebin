@@ -174,6 +174,10 @@ button:hover {
   box-shadow: 0 0 12px red;
   transform: scale(1.05);
 }
+.clickable-user {
+  cursor: pointer;
+  text-decoration: underline dotted;
+}
 
     @keyframes glitch {
       0% { transform: translate(0, 0); }
@@ -399,6 +403,78 @@ button:hover {
     function backToForum() {
   document.getElementById("hall-of-origins").style.display = "none";
   document.getElementById("dashboard").style.display = "block";
+}
+
+function deletePost(postId) {
+  if (confirm("Delete this post?")) {
+    db.ref('posts/' + postId).remove();
+  }
+}
+
+
+function loadPosts() {
+  const container = document.getElementById('posts');
+  db.ref('posts').on('value', (snapshot) => {
+    container.innerHTML = '';
+    const data = snapshot.val();
+    if (data) {
+      const sorted = Object.entries(data).sort((a, b) => b[1].time - a[1].time);
+      sorted.forEach(([id, post]) => {
+        const el = document.createElement('div');
+        el.className = 'post';
+        const time = new Date(post.time).toLocaleString();
+        const isCreator = post.user === '999azazun';
+
+        el.innerHTML = `[${time}] <span class="clickable-user" data-user="${post.user}" style="color:${isCreator ? 'red' : 'white'}">${post.user}</span>: ${post.text}`;
+
+        if (isCreator) {
+          const del = document.createElement('span');
+          del.innerText = ' 🗑';
+          del.style.cursor = 'pointer';
+          del.onclick = () => deletePost(id);
+          el.appendChild(del);
+        }
+
+        container.appendChild(el);
+      });
+
+      
+      document.querySelectorAll('.clickable-user').forEach(span => {
+        span.addEventListener('click', () => showUserProfile(span.dataset.user));
+      });
+    }
+  });
+}
+
+
+function showUserProfile(username) {
+  const postCount = [...document.querySelectorAll('.post')]
+    .filter(p => p.textContent.includes(`${username}:`)).length;
+
+  const isCreator = username === '999azazun';
+  const profileHTML = `
+    <div style="position: fixed; top: 30%; left: 50%; transform: translate(-50%, -50%);
+                background: black; border: 2px solid white; padding: 2rem; z-index: 9999;
+                font-family: 'Press Start 2P', monospace; color: white;">
+      <h2 style="color:${isCreator ? 'red' : 'white'}">${username}</h2>
+      ${isCreator ? '<p style="color:red;">👑 THE CREATOR</p>' : ''}
+      <p>Posts: ${postCount}</p>
+      <p>Joined: ${randomDate()}</p>
+      <button onclick="document.getElementById('user-profile').remove()">Close</button>
+    </div>
+  `;
+  const wrapper = document.createElement('div');
+  wrapper.id = "user-profile";
+  wrapper.innerHTML = profileHTML;
+  document.body.appendChild(wrapper);
+}
+
+
+function randomDate() {
+  const start = new Date(2023, 0, 1);
+  const end = new Date();
+  const d = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+  return d.toLocaleDateString();
 }
 
   </script>
