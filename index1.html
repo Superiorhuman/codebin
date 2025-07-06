@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CODEBIN</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: black;
+      color: white;
+      font-family: 'Press Start 2P', monospace;
+      overflow: hidden;
+    }
+
+    #vanta-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    #main {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 10%;
+    }
+
+    .title {
+      font-size: 2rem;
+      text-align: center;
+      transition: opacity 1s ease;
+    }
+
+    .form {
+      display: none;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    input, textarea {
+      background: black;
+      color: white;
+      border: 1px solid white;
+      padding: 10px;
+      font-family: inherit;
+    }
+
+    button {
+      background: black;
+      color: white;
+      border: 1px solid white;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    #access-message, #register-message, #post-message {
+      font-size: 0.75rem;
+    }
+
+    #dashboard {
+      display: none;
+      height: 100vh;
+      background: black;
+      color: white;
+      font-family: 'Press Start 2P', monospace;
+      padding: 2rem;
+      overflow-y: auto;
+    }
+
+    #posts {
+      margin-top: 1rem;
+      border-top: 1px solid white;
+      padding-top: 1rem;
+    }
+
+    .post {
+      border-bottom: 1px solid gray;
+      padding: 0.5rem 0;
+    }
+
+    #logout-btn {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      font-size: 1rem;
+      padding: 0.5rem;
+      background: black;
+      border: 1px solid white;
+      cursor: pointer;
+      color: white;
+    }
+
+    @keyframes glitch {
+      0% { transform: translate(0, 0); }
+      20% { transform: translate(-5px, 2px); }
+      40% { transform: translate(3px, -2px); }
+      60% { transform: translate(-3px, 1px); }
+      80% { transform: translate(4px, -1px); }
+      100% { transform: translate(0, 0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="vanta-bg"></div>
+
+  <div id="main">
+    <div>
+      <div class="title" id="title">CODEBIN</div>
+
+      <!-- Login Form -->
+      <div class="form" id="form">
+        <input id="login" type="text" placeholder="Login">
+        <input id="password" type="password" placeholder="Password">
+        <button onclick="handleLogin()">Enter</button>
+        <button onclick="showRegister()">Register</button>
+        <div id="access-message" style="margin-top: 1rem; height: 1rem;"></div>
+      </div>
+
+      <!-- Register Form -->
+      <div class="form" id="register-form" style="display: none;">
+        <input id="reg-login" type="text" placeholder="New login">
+        <input id="reg-password" type="password" placeholder="New password">
+        <button onclick="registerUser()">Create Account</button>
+        <button onclick="backToLogin()">Back</button>
+        <div id="register-message" style="margin-top: 1rem; height: 1rem;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard (after login) -->
+<!-- Dashboard (after login) -->
+<div id="dashboard">
+  <button id="logout-btn" onclick="logout()">⏏ Exit</button>
+  <h2 id="welcome"></h2>
+  <p>🔐 Welcome to the CODEBIN Pentester Forum</p>
+
+  <!-- Список постов -->
+  <div id="posts" style="margin-bottom: 140px;"></div>
+
+  <!-- Форма поста внизу -->
+  <div id="post-form" style="position: fixed; bottom: 0; left: 0; width: 100%; background: black; padding: 10px; border-top: 1px solid white;">
+    <textarea id="post-text" rows="2" placeholder="Write a message..."
+              style="width: 80%; resize: none; font-size: 10px;"></textarea>
+    <button onclick="addPost()" style="width: 15%; margin-left: 5px;">Post</button>
+    <div id="post-message" style="margin-top: 5px;"></div>
+  </div>
+</div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.net.min.js"></script>
+  <script>
+    VANTA.NET({
+      el: "#vanta-bg",
+      color: 0xffffff,
+      backgroundColor: 0x000000,
+      points: 10.00,
+      maxDistance: 20.00,
+      spacing: 15.00
+    });
+
+    function glitchEffect() {
+      document.body.style.animation = 'glitch 0.2s linear 3';
+      setTimeout(() => {
+        document.body.style.animation = '';
+      }, 600);
+    }
+
+    setTimeout(() => {
+      document.getElementById('title').style.opacity = 0;
+      setTimeout(() => {
+        document.getElementById('title').style.display = 'none';
+        document.getElementById('form').style.display = 'flex';
+      }, 1000);
+    }, 2000);
+
+    function showRegister() {
+      document.getElementById('form').style.display = 'none';
+      document.getElementById('register-form').style.display = 'flex';
+    }
+
+    function backToLogin() {
+      document.getElementById('register-form').style.display = 'none';
+      document.getElementById('form').style.display = 'flex';
+    }
+
+    function registerUser() {
+      const login = document.getElementById('reg-login').value;
+      const password = document.getElementById('reg-password').value;
+      const msg = document.getElementById('register-message');
+
+      if (login.length < 3 || password.length < 5) {
+        msg.innerText = "Login >= 3, Pass >= 5 chars";
+        msg.style.color = "red";
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem('users') || '{}');
+
+      if (users[login]) {
+        msg.innerText = "User already exists";
+        msg.style.color = "red";
+        return;
+      }
+
+      users[login] = password;
+      localStorage.setItem('users', JSON.stringify(users));
+      msg.innerText = "Account created!";
+      msg.style.color = "lime";
+    }
+
+    function handleLogin() {
+      const login = document.getElementById('login').value;
+      const password = document.getElementById('password').value;
+      const message = document.getElementById('access-message');
+      const users = JSON.parse(localStorage.getItem('users') || '{}');
+
+      if (users[login] === password) {
+        message.innerText = "ACCESS GRANTED";
+        message.style.color = "lime";
+        setTimeout(() => {
+          document.getElementById('main').style.display = 'none';
+          document.getElementById('dashboard').style.display = 'block';
+          document.getElementById('welcome').innerText = `Welcome, ${login}`;
+          loadPosts();
+        }, 1000);
+      } else {
+        message.innerText = "ACCESS DENIED";
+        message.style.color = "red";
+        glitchEffect();
+      }
+    }
+
+    function logout() {
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('main').style.display = 'flex';
+      document.getElementById('form').style.display = 'flex';
+    }
+
+    function addPost() {
+      const text = document.getElementById('post-text').value.trim();
+      const msg = document.getElementById('post-message');
+
+      if (!text) {
+        msg.innerText = "Post cannot be empty";
+        msg.style.color = "red";
+        return;
+      }
+
+      const user = document.getElementById('welcome').innerText.replace('Welcome, ', '');
+      const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+
+      posts.unshift({ user: user, text: text, time: Date.now() });
+      localStorage.setItem('posts', JSON.stringify(posts));
+
+      msg.innerText = "Posted!";
+      msg.style.color = "lime";
+      document.getElementById('post-text').value = '';
+      loadPosts();
+    }
+
+    function loadPosts() {
+      const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+      const container = document.getElementById('posts');
+      container.innerHTML = '';
+
+      posts.forEach(post => {
+        const el = document.createElement('div');
+        el.className = 'post';
+        const time = new Date(post.time).toLocaleString();
+        el.innerText = `[${time}] ${post.user}: ${post.text}`;
+        container.appendChild(el);
+      });
+    }
+  </script>
+</body>
+</html>
