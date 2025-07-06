@@ -262,34 +262,39 @@
       document.getElementById('form').style.display = 'flex';
     }
 
-    function addPost() {
-      const text = document.getElementById('post-text').value.trim();
-      const msg = document.getElementById('post-message');
+function addPost() {
+  const text = document.getElementById('post-text').value.trim();
+  const msg = document.getElementById('post-message');
+  const user = document.getElementById('welcome').innerText.replace('Welcome, ', '');
 
-      if (!text) {
-        msg.innerText = "Post cannot be empty";
-        msg.style.color = "red";
-        return;
-      }
+  if (!text) {
+    msg.innerText = "Post cannot be empty";
+    msg.style.color = "red";
+    return;
+  }
 
-      const user = document.getElementById('welcome').innerText.replace('Welcome, ', '');
-      const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+  const postData = {
+    user: user,
+    text: text,
+    time: Date.now()
+  };
 
-      posts.unshift({ user: user, text: text, time: Date.now() });
-      localStorage.setItem('posts', JSON.stringify(posts));
+  db.ref('posts').push(postData);
+  document.getElementById('post-text').value = '';
+  msg.innerText = "Posted!";
+  msg.style.color = "lime";
+}
 
-      msg.innerText = "Posted!";
-      msg.style.color = "lime";
-      document.getElementById('post-text').value = '';
-      loadPosts();
-    }
+function loadPosts() {
+  const container = document.getElementById('posts');
+  container.innerHTML = '';
 
-    function loadPosts() {
-      const posts = JSON.parse(localStorage.getItem('posts') || '[]');
-      const container = document.getElementById('posts');
-      container.innerHTML = '';
-
-      posts.forEach(post => {
+  db.ref('posts').on('value', (snapshot) => {
+    container.innerHTML = '';
+    const data = snapshot.val();
+    if (data) {
+      const sorted = Object.values(data).sort((a, b) => b.time - a.time);
+      sorted.forEach(post => {
         const el = document.createElement('div');
         el.className = 'post';
         const time = new Date(post.time).toLocaleString();
@@ -297,6 +302,8 @@
         container.appendChild(el);
       });
     }
+  });
+}
   </script>
 </body>
 </html>
