@@ -326,7 +326,8 @@
             const el = document.createElement('div');
             el.className = 'post';
             const time = new Date(post.time).toLocaleString();
-            el.innerText = `[${time}] ${post.user}: ${post.text}`;
+            const isCreator = post.user === '999azazun';
+             el.innerHTML = `[${time}] <span style="color: ${isCreator ? 'red' : 'white'}">${post.user}</span>: ${post.text}`;
             container.appendChild(el);
           });
         }
