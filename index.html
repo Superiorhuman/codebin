@@ -383,7 +383,6 @@ button:hover {
             el.className = 'post';
             const time = new Date(post.time).toLocaleString();
             const isCreator = post.user === '999azazun';
-             el.innerHTML = `[${time}] <span style="color: ${isCreator ? 'red' : 'white'}">${post.user}</span>: ${post.text}`;
 const currentUser = document.getElementById('welcome').innerText.replace('Welcome, ', '');
 el.innerHTML = `
   [${time}] 
@@ -427,6 +426,10 @@ function loadPosts() {
     if (data) {
       const sorted = Object.entries(data).sort((a, b) => b[1].time - a[1].time);
       sorted.forEach(([id, post]) => {
+      const sorted = Object.entries(data).sort(([, a], [, b]) => b.time - a.time);
+      const currentUser = document.getElementById('welcome').innerText.replace('Welcome, ', '');
+
+      sorted.forEach(([key, post]) => {
         const el = document.createElement('div');
         el.className = 'post';
         const time = new Date(post.time).toLocaleString();
@@ -442,8 +445,24 @@ function loadPosts() {
           el.appendChild(del);
         }
 
+        const isAdmin = currentUser === '999azazun';
+
+        el.innerHTML = `
+          [${time}] 
+          <span class="clickable-user" data-user="${post.user}" style="color: ${isCreator ? 'red' : 'white'}">${post.user}</span>: 
+          ${post.text}
+          ${isAdmin ? `<button onclick="deletePost('${key}')" style="margin-left:10px; color:red; background:none; border:1px solid red; cursor:pointer;">🗑</button>` : ''}
+        `;
         container.appendChild(el);
       });
+
+      document.querySelectorAll('.clickable-user').forEach(span => {
+        span.addEventListener('click', () => showUserProfile(span.dataset.user));
+      });
+    }
+  });
+}
+
 
 
       document.querySelectorAll('.clickable-user').forEach(span => {
@@ -489,6 +508,10 @@ function deletePost(timestamp) {
       }
     }
   });
+function deletePost(postKey) {
+  if (confirm("Удалить сообщение?")) {
+    db.ref('posts/' + postKey).remove();
+  }
 }
 
   </script>
