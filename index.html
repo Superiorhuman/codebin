@@ -383,7 +383,13 @@ button:hover {
             el.className = 'post';
             const time = new Date(post.time).toLocaleString();
             const isCreator = post.user === '999azazun';
-             el.innerHTML = `[${time}] <span style="color: ${isCreator ? 'red' : 'white'}">${post.user}</span>: ${post.text}`;
+const currentUser = document.getElementById('welcome').innerText.replace('Welcome, ', '');
+el.innerHTML = `
+  [${time}] 
+  <span style="color: ${isCreator ? 'red' : 'white'}">${post.user}</span>: 
+  ${post.text}
+  ${currentUser === '999azazun' ? `<button onclick="deletePost('${post.time}')" style="margin-left:10px; color:red; background:none; border:1px solid red; cursor:pointer;">🗑</button>` : ''}
+`;
             container.appendChild(el);
           });
         }
@@ -471,6 +477,17 @@ function showUserProfile(username) {
 function closeUserProfile() {
   const profile = document.getElementById("user-profile");
   if (profile) profile.remove();
+}
+function deletePost(timestamp) {
+  db.ref('posts').once('value', (snapshot) => {
+    const posts = snapshot.val();
+    for (let key in posts) {
+      if (posts[key].time === timestamp) {
+        db.ref('posts/' + key).remove();
+        break;
+      }
+    }
+  });
 }
 
   </script>
