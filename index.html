@@ -459,7 +459,6 @@ function showUserProfile(username) {
       <h2 style="color:${isCreator ? 'red' : 'white'}">${username}</h2>
       ${isCreator ? '<p style="color:red;">👑 THE CREATOR</p>' : ''}
       <p>Posts: ${postCount}</p>
-      <p>Joined: ${randomDate()}</p>
       <button onclick="document.getElementById('user-profile').remove()">Close</button>
     </div>
   `;
@@ -469,12 +468,9 @@ function showUserProfile(username) {
   document.body.appendChild(wrapper);
 }
 
-
-function randomDate() {
-  const start = new Date(2023, 0, 1);
-  const end = new Date();
-  const d = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-  return d.toLocaleDateString();
+function closeUserProfile() {
+  const profile = document.getElementById("user-profile");
+  if (profile) profile.remove();
 }
 
   </script>
