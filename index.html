@@ -14,47 +14,44 @@
       font-family: 'Press Start 2P', monospace;
       overflow: hidden;
     }
-@media (max-width: 768px) {
-  body {
-    font-size: 10px;
-  }
 
-  .title {
-    font-size: 1.2rem;
-    padding: 0 1rem;
-  }
+    @media (max-width: 768px) {
+      body {
+        font-size: 10px;
+      }
 
-  #main {
-    padding: 0 2rem;
-  }
+      .title {
+        font-size: 1.2rem;
+        padding: 0 1rem;
+      }
 
-  input, textarea, button {
-    font-size: 10px;
-    padding: 8px;
-  }
-  
-  #post-form {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-  }
-  #post-form {
-    flex-direction: column;
-    align-items: stretch;
-  }
+      #main {
+        padding: 0 2rem;
+      }
 
-  #post-text {
-    width: 100% !important;
-    margin-bottom: 5px;
-  }
+      input, textarea, button {
+        font-size: 10px;
+        padding: 8px;
+      }
 
-  #post-form button {
-    width: 100% !important;
-    margin-left: 0 !important;
-  }
-}
+      #post-form {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+      }
 
-    #vanta-bg {
+      #post-text {
+        width: 100% !important;
+        margin-bottom: 5px;
+      }
+
+      #post-form button {
+        width: 100% !important;
+        margin-left: 0 !important;
+      }
+    }
+
+    #vanta-bg, #forum-bg {
       position: fixed;
       top: 0; left: 0;
       width: 100%;
@@ -108,11 +105,12 @@
     #dashboard {
       display: none;
       height: 100vh;
-      background: black;
+      background: transparent;
       color: white;
       font-family: 'Press Start 2P', monospace;
       padding: 2rem;
       overflow-y: auto;
+      position: relative;
     }
 
     #posts {
@@ -146,26 +144,15 @@
       80% { transform: translate(4px, -1px); }
       100% { transform: translate(0, 0); }
     }
-    #vanta-forum {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -2;
-  opacity: 0.2;
-}
-
   </style>
 </head>
 <body>
-
   <div id="vanta-bg"></div>
+  <div id="forum-bg"></div>
 
   <div id="main">
     <div>
       <div class="title" id="title">CODEBIN</div>
-
-      <!-- Login Form -->
       <div class="form" id="form">
         <input id="login" type="text" placeholder="Login">
         <input id="password" type="password" placeholder="Password">
@@ -173,8 +160,6 @@
         <button onclick="showRegister()">Register</button>
         <div id="access-message" style="margin-top: 1rem; height: 1rem;"></div>
       </div>
-
-      <!-- Register Form -->
       <div class="form" id="register-form" style="display: none;">
         <input id="reg-login" type="text" placeholder="New login">
         <input id="reg-password" type="password" placeholder="New password">
@@ -185,53 +170,35 @@
     </div>
   </div>
 
-  <!-- Dashboard (after login) -->
-<!-- Dashboard (after login) -->
-<div id="dashboard">
-  <div id="vanta-forum"></div>
-
-  <button id="logout-btn" onclick="logout()">⏏ Exit</button>
-  <h2 id="welcome"></h2>
-  <p>🔐 Welcome to the CODEBIN Pentester Forum</p>
-
-  <!-- Список постов -->
-  <div id="posts" style="margin-bottom: 140px;"></div>
-
-  <!-- Форма поста внизу -->
-  <div id="post-form" style="position: fixed; bottom: 0; left: 0; width: 100%; background: black; padding: 10px; border-top: 1px solid white;">
-    <textarea id="post-text" rows="2" placeholder="Write a message..."
-              style="width: 80%; resize: none; font-size: 10px;"></textarea>
-    <button onclick="addPost()" style="width: 15%; margin-left: 5px;">Post</button>
-    <div id="post-message" style="margin-top: 5px;"></div>
+  <div id="dashboard">
+    <button id="logout-btn" onclick="logout()">⏏ Exit</button>
+    <h2 id="welcome"></h2>
+    <p>🔐 Welcome to the CODEBIN Pentester Forum</p>
+    <div id="posts" style="margin-bottom: 140px;"></div>
+    <div id="post-form" style="position: fixed; bottom: 0; left: 0; width: 100%; background: black; padding: 10px; border-top: 1px solid white;">
+      <textarea id="post-text" rows="2" placeholder="Write a message..." style="width: 80%; resize: none; font-size: 10px;"></textarea>
+      <button onclick="addPost()" style="width: 15%; margin-left: 5px;">Post</button>
+      <div id="post-message" style="margin-top: 5px;"></div>
+    </div>
   </div>
-</div>
 
-  <!-- Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.net.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyB3bWYSS0da6i7_8l9ceHtY3MdK7Rfg2DQ",
-    authDomain: "codebin-cd4d7.firebaseapp.com",
-    projectId: "codebin-cd4d7",
-    storageBucket: "codebin-cd4d7.appspot.com",
-    messagingSenderId: "40920711224",
-    appId: "1:40920711224:web:74a3f935ee45a3a72566cd"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth(), db = firebase.database();
-  VANTA.NET({
-    el: "#vanta-forum",
-    color: 0x00ff00,
-    backgroundColor: 0x000000,
-    points: 10.00,
-    maxDistance: 20.00,
-    spacing: 15.00
-</script>
   <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyB3bWYSS0da6i7_8l9ceHtY3MdK7Rfg2DQ",
+      authDomain: "codebin-cd4d7.firebaseapp.com",
+      databaseURL: "https://codebin-cd4d7-default-rtdb.firebaseio.com",
+      projectId: "codebin-cd4d7",
+      storageBucket: "codebin-cd4d7.appspot.com",
+      messagingSenderId: "40920711224",
+      appId: "1:40920711224:web:74a3f935ee45a3a72566cd"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
     VANTA.NET({
       el: "#vanta-bg",
       color: 0xffffff,
@@ -241,20 +208,27 @@
       spacing: 15.00
     });
 
+    VANTA.NET({
+      el: "#forum-bg",
+      color: 0x00ff00,
+      backgroundColor: 0x000000,
+      points: 8.00,
+      maxDistance: 25.00,
+      spacing: 18.00,
+      mouseControls: false,
+      touchControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      scale: 1.00,
+      scaleMobile: 1.00
+    });
+
     function glitchEffect() {
       document.body.style.animation = 'glitch 0.2s linear 3';
       setTimeout(() => {
         document.body.style.animation = '';
       }, 600);
     }
-
-    setTimeout(() => {
-      document.getElementById('title').style.opacity = 0;
-      setTimeout(() => {
-        document.getElementById('title').style.display = 'none';
-        document.getElementById('form').style.display = 'flex';
-      }, 1000);
-    }, 2000);
 
     function showRegister() {
       document.getElementById('form').style.display = 'none';
@@ -278,7 +252,6 @@
       }
 
       const users = JSON.parse(localStorage.getItem('users') || '{}');
-
       if (users[login]) {
         msg.innerText = "User already exists";
         msg.style.color = "red";
@@ -319,48 +292,46 @@
       document.getElementById('form').style.display = 'flex';
     }
 
-function addPost() {
-  const text = document.getElementById('post-text').value.trim();
-  const msg = document.getElementById('post-message');
-  const user = document.getElementById('welcome').innerText.replace('Welcome, ', '');
+    function addPost() {
+      const text = document.getElementById('post-text').value.trim();
+      const msg = document.getElementById('post-message');
+      const user = document.getElementById('welcome').innerText.replace('Welcome, ', '');
 
-  if (!text) {
-    msg.innerText = "Post cannot be empty";
-    msg.style.color = "red";
-    return;
-  }
+      if (!text) {
+        msg.innerText = "Post cannot be empty";
+        msg.style.color = "red";
+        return;
+      }
 
-  const postData = {
-    user: user,
-    text: text,
-    time: Date.now()
-  };
+      const postData = {
+        user: user,
+        text: text,
+        time: Date.now()
+      };
 
-  db.ref('posts').push(postData);
-  document.getElementById('post-text').value = '';
-  msg.innerText = "Posted!";
-  msg.style.color = "lime";
-}
+      db.ref('posts').push(postData);
+      document.getElementById('post-text').value = '';
+      msg.innerText = "Posted!";
+      msg.style.color = "lime";
+    }
 
-function loadPosts() {
-  const container = document.getElementById('posts');
-  container.innerHTML = '';
-
-  db.ref('posts').on('value', (snapshot) => {
-    container.innerHTML = '';
-    const data = snapshot.val();
-    if (data) {
-      const sorted = Object.values(data).sort((a, b) => b.time - a.time);
-      sorted.forEach(post => {
-        const el = document.createElement('div');
-        el.className = 'post';
-        const time = new Date(post.time).toLocaleString();
-        el.innerText = `[${time}] ${post.user}: ${post.text}`;
-        container.appendChild(el);
+    function loadPosts() {
+      const container = document.getElementById('posts');
+      db.ref('posts').on('value', (snapshot) => {
+        container.innerHTML = '';
+        const data = snapshot.val();
+        if (data) {
+          const sorted = Object.values(data).sort((a, b) => b.time - a.time);
+          sorted.forEach(post => {
+            const el = document.createElement('div');
+            el.className = 'post';
+            const time = new Date(post.time).toLocaleString();
+            el.innerText = `[${time}] ${post.user}: ${post.text}`;
+            container.appendChild(el);
+          });
+        }
       });
     }
-  });
-}
   </script>
 </body>
 </html>
