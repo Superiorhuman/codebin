@@ -159,6 +159,21 @@
   <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.net.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyB3bWYSS0da6i7_8l9ceHtY3MdK7Rfg2DQ",
+    authDomain: "codebin-cd4d7.firebaseapp.com",
+    projectId: "codebin-cd4d7",
+    storageBucket: "codebin-cd4d7.appspot.com",
+    messagingSenderId: "40920711224",
+    appId: "1:40920711224:web:74a3f935ee45a3a72566cd"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth(), db = firebase.database();
+</script>
   <script>
     VANTA.NET({
       el: "#vanta-bg",
