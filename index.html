@@ -454,27 +454,30 @@ function logout() {
       document.getElementById("dashboard").style.display = "block";
     }
 
-    function showUserProfile(username) {
-      const postCount = [...document.querySelectorAll('.post')]
-        .filter(p => p.textContent.includes(`${username}:`)).length;
+function showUserProfile(username) {
+  const postCount = [...document.querySelectorAll('.post')]
+    .filter(p => p.textContent.includes(`${username}:`)).length;
 
-      const isCreator = username === '999azazun';
-      const profileHTML = `
-        <div id="user-profile" style="position: fixed; top: 30%; left: 50%; transform: translate(-50%, -50%);
-                    background: black; border: 2px solid white; padding: 2rem; z-index: 9999;
-                    font-family: 'Press Start 2P', monospace; color: white;">
-          <h2 style="color:${isCreator ? 'red' : 'white'}">${username}</h2>
-          ${isCreator ? '<p style="color:red;">👑 THE CREATOR</p>' : ''}
-          <p>Posts: ${postCount}</p>
-          <button onclick="document.getElementById('user-profile').remove()">Close</button>
-        </div>
-      `;
+  const isCreator = username === '999azazun';
+  const isBetaTester = username === 'Faper';
 
-      const wrapper = document.createElement('div');
-      wrapper.id = "user-profile";
-      wrapper.innerHTML = profileHTML;
-      document.body.appendChild(wrapper);
-    }
+  const profileHTML = `
+    <div id="user-profile" style="position: fixed; top: 30%; left: 50%; transform: translate(-50%, -50%);
+                background: black; border: 2px solid white; padding: 2rem; z-index: 9999;
+                font-family: 'Press Start 2P', monospace; color: white;">
+      <h2 style="color:${isCreator ? 'red' : isBetaTester ? 'skyblue' : 'white'}">${username}</h2>
+      ${isCreator ? '<p style="color:red;">👑 THE CREATOR</p>' : isBetaTester ? '<p style="color:skyblue;">🔧 BETA TESTER</p>' : ''}
+      <p>Posts: ${postCount}</p>
+      <button onclick="document.getElementById('user-profile').remove()">Close</button>
+    </div>
+  `;
+
+  const wrapper = document.createElement('div');
+  wrapper.id = "user-profile";
+  wrapper.innerHTML = profileHTML;
+  document.body.appendChild(wrapper);
+}
+
 
     function loadPosts() {
       const container = document.getElementById('posts');
@@ -488,8 +491,8 @@ function logout() {
             el.className = 'post';
             const time = new Date(post.time).toLocaleString();
             const isCreator = post.user === '999azazun';
-
-            el.innerHTML = `[${time}] <span class="clickable-user" data-user="${post.user}" style="color:${isCreator ? 'red' : 'white'}">${post.user}</span>: ${post.text}`;
+            const isBetaTester = post.user === 'Faper';
+            el.innerHTML = `[${time}] <span class="clickable-user" data-user="${post.user}" style="color:${isCreator ? 'red' : isBetaTester ? 'skyblue' : 'white'}">${post.user}</span>: ${post.text}`;
 
             container.appendChild(el);
           });
