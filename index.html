@@ -224,6 +224,8 @@
   <div id="dashboard">
     <button id="logout-btn" onclick="logout()">⏏ Exit</button>
     <button class="special-button" style="position: fixed; top: 10px; left: 10px;" onclick="showHall()">🏛 Hall of Origins</button>
+    <button onclick="changePassword()">🔑 Change Password</button>
+    <button onclick="deleteAccount()">🗑 Delete Account</button>
     <h2 id="welcome"></h2>
     <p>🔐 Welcome to the CODEBIN Forum</p>
     <div id="posts"></div>
@@ -462,6 +464,67 @@ function logout() {
         addPost();
       }
     });
+    function deleteAccount() {
+  const user = firebase.auth().currentUser;
+
+  if (!user) {
+    alert("No user logged in.");
+    return;
+  }
+
+  if (!confirm("Are you sure you want to delete your account? This cannot be undone.")) {
+    return;
+  }
+
+  const uid = user.uid;
+
+  // Удалим имя из базы
+  db.ref('users/' + uid).remove()
+    .then(() => {
+      // Удалим сам аккаунт
+      return user.delete();
+    })
+    .then(() => {
+      alert("Your account was deleted.");
+      location.reload(); // вернуться на логин
+    })
+    .catch((error) => {
+      if (error.code === 'auth/requires-recent-login') {
+        alert("⚠️ For security, please log in again before deleting your account.");
+        logout();
+      } else {
+        alert("Error: " + error.message);
+      }
+    });
+}
+function changePassword() {
+  const user = firebase.auth().currentUser;
+
+  if (!user) {
+    alert("No user logged in.");
+    return;
+  }
+
+  const newPassword = prompt("Enter your new password (at least 6 characters):");
+
+  if (!newPassword || newPassword.length < 6) {
+    alert("Password must be at least 6 characters.");
+    return;
+  }
+
+  user.updatePassword(newPassword)
+    .then(() => {
+      alert("Password updated successfully.");
+    })
+    .catch((error) => {
+      if (error.code === 'auth/requires-recent-login') {
+        alert("⚠️ Please log in again before changing your password.");
+        logout(); // выходим и просим залогиниться заново
+      } else {
+        alert("Error: " + error.message);
+      }
+    });
+}
   </script>
 </body>
 </html>
