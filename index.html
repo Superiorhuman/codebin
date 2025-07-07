@@ -386,12 +386,11 @@ button:hover {
   document.getElementById("dashboard").style.display = "block";
 }
 
-function deletePost(postId) {
-  if (confirm("Delete this post?")) {
-    db.ref('posts/' + postId).remove();
+function deletePost(postKey) {
+  if (confirm("Удалить сообщение?")) {
+    db.ref('posts/' + postKey).remove();
   }
 }
-
 
 function loadPosts() {
   const container = document.getElementById('posts');
@@ -399,8 +398,6 @@ function loadPosts() {
     container.innerHTML = '';
     const data = snapshot.val();
     if (data) {
-      const sorted = Object.entries(data).sort((a, b) => b[1].time - a[1].time);
-      sorted.forEach(([id, post]) => {
       const sorted = Object.entries(data).sort(([, a], [, b]) => b.time - a.time);
       const currentUser = document.getElementById('welcome').innerText.replace('Welcome, ', '');
 
@@ -409,17 +406,6 @@ function loadPosts() {
         el.className = 'post';
         const time = new Date(post.time).toLocaleString();
         const isCreator = post.user === '999azazun';
-
-        el.innerHTML = `[${time}] <span class="clickable-user" data-user="${post.user}" style="color:${isCreator ? 'red' : 'white'}">${post.user}</span>: ${post.text}`;
-
-        if (isCreator) {
-          const del = document.createElement('span');
-          del.innerText = ' 🗑';
-          del.style.cursor = 'pointer';
-          del.onclick = () => deletePost(id);
-          el.appendChild(del);
-        }
-
         const isAdmin = currentUser === '999azazun';
 
         el.innerHTML = `
@@ -431,22 +417,13 @@ function loadPosts() {
         container.appendChild(el);
       });
 
+      // вот здесь ДОЛЖЕН быть этот обработчик
       document.querySelectorAll('.clickable-user').forEach(span => {
         span.addEventListener('click', () => showUserProfile(span.dataset.user));
       });
     }
   });
 }
-
-
-
-      document.querySelectorAll('.clickable-user').forEach(span => {
-        span.addEventListener('click', () => showUserProfile(span.dataset.user));
-      });
-    }
-  });
-}
-
 
 function showUserProfile(username) {
   const postCount = [...document.querySelectorAll('.post')]
@@ -474,11 +451,6 @@ function closeUserProfile() {
   if (profile) profile.remove();
 }
 
-function deletePost(postKey) {
-  if (confirm("Удалить сообщение?")) {
-    db.ref('posts/' + postKey).remove();
-  }
-}
 
   </script>
 </body>
