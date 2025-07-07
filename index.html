@@ -373,11 +373,7 @@
       msg.style.color = "lime";
     }
 
-    function deletePost(postId) {
-      if (confirm("Delete this post?")) {
-        db.ref('posts/' + postId).remove();
-      }
-    }
+
 
     function showHall() {
       document.getElementById("dashboard").style.display = "none";
@@ -425,14 +421,6 @@
             const isCreator = post.user === '999azazun';
 
             el.innerHTML = `[${time}] <span class="clickable-user" data-user="${post.user}" style="color:${isCreator ? 'red' : 'white'}">${post.user}</span>: ${post.text}`;
-
-            if (isCreator) {
-              const del = document.createElement('span');
-              del.innerText = ' 🗑';
-              del.style.cursor = 'pointer';
-              del.onclick = () => deletePost(id);
-              el.appendChild(del);
-            }
 
             container.appendChild(el);
           });
