@@ -473,16 +473,7 @@ function closeUserProfile() {
   const profile = document.getElementById("user-profile");
   if (profile) profile.remove();
 }
-function deletePost(timestamp) {
-  db.ref('posts').once('value', (snapshot) => {
-    const posts = snapshot.val();
-    for (let key in posts) {
-      if (posts[key].time === timestamp) {
-        db.ref('posts/' + key).remove();
-        break;
-      }
-    }
-  });
+
 function deletePost(postKey) {
   if (confirm("Удалить сообщение?")) {
     db.ref('posts/' + postKey).remove();
