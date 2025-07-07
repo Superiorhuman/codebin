@@ -213,6 +213,7 @@
       <div class="form" id="register-form" style="display: none;">
         <input id="reg-login" type="text" placeholder="New email">
         <input id="reg-password" type="password" placeholder="New password">
+        <input id="reg-name" type="text" placeholder="Display name (login)">
         <button onclick="registerUser()">Create Account</button>
         <button onclick="backToLogin()">Back</button>
         <div id="register-message" style="margin-top: 1rem; height: 1rem;"></div>
@@ -312,15 +313,20 @@
 function registerUser() {
   const email = document.getElementById('reg-login').value;
   const password = document.getElementById('reg-password').value;
+  const displayName = document.getElementById('reg-name').value;
   const msg = document.getElementById('register-message');
 
-  if (email.length < 3 || password.length < 5) {
-    msg.innerText = "Login >= 3, Pass >= 5 chars";
+  if (email.length < 3 || password.length < 5 || displayName.length < 3) {
+    msg.innerText = "Name >= 3, Login >= 3, Pass >= 5 chars";
     msg.style.color = "red";
     return;
   }
 
   firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      const uid = userCredential.user.uid;
+      return db.ref('users/' + uid).set({ displayName: displayName });
+    })
     .then(() => {
       msg.innerText = "Account created!";
       msg.style.color = "lime";
@@ -331,7 +337,8 @@ function registerUser() {
     });
 }
 
-    function handleLogin() {
+
+function handleLogin() {
   const email = document.getElementById('login').value;
   const password = document.getElementById('password').value;
   const message = document.getElementById('access-message');
@@ -343,8 +350,13 @@ function registerUser() {
       setTimeout(() => {
         document.getElementById('main').style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
-        document.getElementById('welcome').innerText = `Welcome, ${email}`;
-        loadPosts();
+
+        const uid = userCredential.user.uid;
+        db.ref('users/' + uid).once('value').then(snapshot => {
+          const displayName = snapshot.val()?.displayName || email;
+          document.getElementById('welcome').innerText = `Welcome, ${displayName}`;
+          loadPosts();
+        });
       }, 1000);
     })
     .catch((error) => {
