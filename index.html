@@ -75,26 +75,25 @@
     }
 
     button {
-  background: black;
-  color: white;
-  font-family: 'Press Start 2P', monospace;
-  font-size: 12px;
-  padding: 12px 16px;
-  border: 2px solid white;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
+      background: black;
+      color: white;
+      font-family: 'Press Start 2P', monospace;
+      font-size: 12px;
+      padding: 12px 16px;
+      border: 2px solid white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
 
-button:hover {
-  background: white;
-  color: black;
-  box-shadow: 0 0 8px white;
-  transform: scale(1.05);
-}
-
+    button:hover {
+      background: white;
+      color: black;
+      box-shadow: 0 0 8px white;
+      transform: scale(1.05);
+    }
 
     #access-message, #register-message, #post-message {
       font-size: 0.75rem;
@@ -156,28 +155,30 @@ button:hover {
       width: 120px;
       margin-left: 10px;
     }
-    .special-button {
-  font-size: 12px;
-  border: 2px solid red;
-  color: red;
-  background: black;
-  font-family: 'Press Start 2P', monospace;
-  padding: 12px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
 
-.special-button:hover {
-  background: red;
-  color: black;
-  box-shadow: 0 0 12px red;
-  transform: scale(1.05);
-}
-.clickable-user {
-  cursor: pointer;
-  text-decoration: underline dotted;
-}
+    .special-button {
+      font-size: 12px;
+      border: 2px solid red;
+      color: red;
+      background: black;
+      font-family: 'Press Start 2P', monospace;
+      padding: 12px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+    }
+
+    .special-button:hover {
+      background: red;
+      color: black;
+      box-shadow: 0 0 12px red;
+      transform: scale(1.05);
+    }
+
+    .clickable-user {
+      cursor: pointer;
+      text-decoration: underline dotted;
+    }
 
     @keyframes glitch {
       0% { transform: translate(0, 0); }
@@ -189,12 +190,12 @@ button:hover {
     }
   </style>
   <script src="https://unpkg.com/cursor-effects@latest/dist/browser.js"></script>
-<script>
-  new cursoreffects.sparkleCursor({
-    color: "random",
-    sparkleCount: 40
-  });
-</script>
+  <script>
+    new cursoreffects.sparkleCursor({
+      color: "random",
+      sparkleCount: 40
+    });
+  </script>
 </head>
 <body>
   <div id="vanta-bg"></div>
@@ -231,18 +232,18 @@ button:hover {
       <div id="post-message" style="position: absolute; bottom: 50px; left: 10px;"></div>
     </div>
   </div>
-<!-- Hall of Origins Section -->
-<div id="hall-of-origins" style="display: none; padding: 2rem; text-align: center;">
-  <h1 style="color: red; margin-bottom: 2rem;">Hall of Origins</h1>
-  <div style="display: inline-block; border: 3px solid red; padding: 10px; border-radius: 15px; position: relative;">
-    <img src="https://github.com/Superiorhuman/codebin/blob/main/img/%D0%98%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5%20WhatsApp%202025-07-07%20%D0%B2%2000.43.24_2be487b7.jpg?raw=true" 
-         alt="999azazun" 
-         style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover;">
-    <div style="margin-top: 1rem; color: red; font-size: 1rem;">999azazun — <strong>THE CREATOR</strong></div>
+
+  <div id="hall-of-origins" style="display: none; padding: 2rem; text-align: center;">
+    <h1 style="color: red; margin-bottom: 2rem;">Hall of Origins</h1>
+    <div style="display: inline-block; border: 3px solid red; padding: 10px; border-radius: 15px; position: relative;">
+      <img src="https://github.com/Superiorhuman/codebin/blob/main/img/%D0%98%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5%20WhatsApp%202025-07-07%20%D0%B2%2000.43.24_2be487b7.jpg?raw=true"
+           alt="999azazun"
+           style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover;">
+      <div style="margin-top: 1rem; color: red; font-size: 1rem;">999azazun — <strong>THE CREATOR</strong></div>
+    </div>
+    <br>
+    <button class="special-button" onclick="backToForum()" style="margin-top: 2rem;">⬅ Back to Forum</button>
   </div>
-  <br>
-<button class="special-button" onclick="backToForum()" style="margin-top: 2rem;">⬅ Back to Forum</button>
-</div>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -258,6 +259,7 @@ button:hover {
       messagingSenderId: "40920711224",
       appId: "1:40920711224:web:74a3f935ee45a3a72566cd"
     };
+
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
@@ -371,87 +373,83 @@ button:hover {
       msg.style.color = "lime";
     }
 
-    document.getElementById("post-text").addEventListener("keydown", function(e) {
+    function deletePost(postId) {
+      if (confirm("Delete this post?")) {
+        db.ref('posts/' + postId).remove();
+      }
+    }
+
+    function showHall() {
+      document.getElementById("dashboard").style.display = "none";
+      document.getElementById("hall-of-origins").style.display = "block";
+    }
+
+    function backToForum() {
+      document.getElementById("hall-of-origins").style.display = "none";
+      document.getElementById("dashboard").style.display = "block";
+    }
+
+    function showUserProfile(username) {
+      const postCount = [...document.querySelectorAll('.post')]
+        .filter(p => p.textContent.includes(`${username}:`)).length;
+
+      const isCreator = username === '999azazun';
+      const profileHTML = `
+        <div id="user-profile" style="position: fixed; top: 30%; left: 50%; transform: translate(-50%, -50%);
+                    background: black; border: 2px solid white; padding: 2rem; z-index: 9999;
+                    font-family: 'Press Start 2P', monospace; color: white;">
+          <h2 style="color:${isCreator ? 'red' : 'white'}">${username}</h2>
+          ${isCreator ? '<p style="color:red;">👑 THE CREATOR</p>' : ''}
+          <p>Posts: ${postCount}</p>
+          <button onclick="document.getElementById('user-profile').remove()">Close</button>
+        </div>
+      `;
+
+      const wrapper = document.createElement('div');
+      wrapper.id = "user-profile";
+      wrapper.innerHTML = profileHTML;
+      document.body.appendChild(wrapper);
+    }
+
+    function loadPosts() {
+      const container = document.getElementById('posts');
+      db.ref('posts').on('value', (snapshot) => {
+        container.innerHTML = '';
+        const data = snapshot.val();
+        if (data) {
+          const sorted = Object.entries(data).sort((a, b) => b[1].time - a[1].time);
+          sorted.forEach(([id, post]) => {
+            const el = document.createElement('div');
+            el.className = 'post';
+            const time = new Date(post.time).toLocaleString();
+            const isCreator = post.user === '999azazun';
+
+            el.innerHTML = `[${time}] <span class="clickable-user" data-user="${post.user}" style="color:${isCreator ? 'red' : 'white'}">${post.user}</span>: ${post.text}`;
+
+            if (isCreator) {
+              const del = document.createElement('span');
+              del.innerText = ' 🗑';
+              del.style.cursor = 'pointer';
+              del.onclick = () => deletePost(id);
+              el.appendChild(del);
+            }
+
+            container.appendChild(el);
+          });
+
+          document.querySelectorAll('.clickable-user').forEach(span => {
+            span.addEventListener('click', () => showUserProfile(span.dataset.user));
+          });
+        }
+      });
+    }
+
+    document.getElementById("post-text").addEventListener("keydown", function (e) {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         addPost();
       }
     });
-    function showHall() {
-  document.getElementById("dashboard").style.display = "none";
-  document.getElementById("hall-of-origins").style.display = "block";
-}
-    function backToForum() {
-  document.getElementById("hall-of-origins").style.display = "none";
-  document.getElementById("dashboard").style.display = "block";
-}
-
-function deletePost(postKey) {
-  if (confirm("Удалить сообщение?")) {
-    db.ref('posts/' + postKey).remove();
-  }
-}
-
-function loadPosts() {
-  const container = document.getElementById('posts');
-  db.ref('posts').on('value', (snapshot) => {
-    container.innerHTML = '';
-    const data = snapshot.val();
-    if (data) {
-      const sorted = Object.entries(data).sort(([, a], [, b]) => b.time - a.time);
-      const currentUser = document.getElementById('welcome').innerText.replace('Welcome, ', '');
-
-      sorted.forEach(([key, post]) => {
-        const el = document.createElement('div');
-        el.className = 'post';
-        const time = new Date(post.time).toLocaleString();
-        const isCreator = post.user === '999azazun';
-        const isAdmin = currentUser === '999azazun';
-
-        el.innerHTML = `
-          [${time}] 
-          <span class="clickable-user" data-user="${post.user}" style="color: ${isCreator ? 'red' : 'white'}">${post.user}</span>: 
-          ${post.text}
-          ${isAdmin ? `<button onclick="deletePost('${key}')" style="margin-left:10px; color:red; background:none; border:1px solid red; cursor:pointer;">🗑</button>` : ''}
-        `;
-        container.appendChild(el);
-      });
-
-      // вот здесь ДОЛЖЕН быть этот обработчик
-      document.querySelectorAll('.clickable-user').forEach(span => {
-        span.addEventListener('click', () => showUserProfile(span.dataset.user));
-      });
-    }
-  });
-}
-
-function showUserProfile(username) {
-  const postCount = [...document.querySelectorAll('.post')]
-    .filter(p => p.textContent.includes(`${username}:`)).length;
-
-  const isCreator = username === '999azazun';
-  const profileHTML = `
-    <div style="position: fixed; top: 30%; left: 50%; transform: translate(-50%, -50%);
-                background: black; border: 2px solid white; padding: 2rem; z-index: 9999;
-                font-family: 'Press Start 2P', monospace; color: white;">
-      <h2 style="color:${isCreator ? 'red' : 'white'}">${username}</h2>
-      ${isCreator ? '<p style="color:red;">👑 THE CREATOR</p>' : ''}
-      <p>Posts: ${postCount}</p>
-      <button onclick="document.getElementById('user-profile').remove()">Close</button>
-    </div>
-  `;
-  const wrapper = document.createElement('div');
-  wrapper.id = "user-profile";
-  wrapper.innerHTML = profileHTML;
-  document.body.appendChild(wrapper);
-}
-
-function closeUserProfile() {
-  const profile = document.getElementById("user-profile");
-  if (profile) profile.remove();
-}
-
-
   </script>
 </body>
 </html>
