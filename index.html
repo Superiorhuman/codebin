@@ -257,6 +257,7 @@
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.net.min.js"></script>
@@ -308,58 +309,58 @@
       document.getElementById('form').style.display = 'flex';
     }
 
-    function registerUser() {
-      const login = document.getElementById('reg-login').value;
-      const password = document.getElementById('reg-password').value;
-      const msg = document.getElementById('register-message');
+function registerUser() {
+  const email = document.getElementById('reg-login').value;
+  const password = document.getElementById('reg-password').value;
+  const msg = document.getElementById('register-message');
 
-      if (login.length < 3 || password.length < 5) {
-        msg.innerText = "Login >= 3, Pass >= 5 chars";
-        msg.style.color = "red";
-        return;
-      }
+  if (email.length < 3 || password.length < 5) {
+    msg.innerText = "Login >= 3, Pass >= 5 chars";
+    msg.style.color = "red";
+    return;
+  }
 
-      const users = JSON.parse(localStorage.getItem('users') || '{}');
-
-      if (users[login]) {
-        msg.innerText = "User already exists";
-        msg.style.color = "red";
-        return;
-      }
-
-      users[login] = password;
-      localStorage.setItem('users', JSON.stringify(users));
+  firebase.auth().createUserWithEmailAndPassword(email, password)
+    .then(() => {
       msg.innerText = "Account created!";
       msg.style.color = "lime";
-    }
+    })
+    .catch((error) => {
+      msg.innerText = error.message;
+      msg.style.color = "red";
+    });
+}
 
     function handleLogin() {
-      const login = document.getElementById('login').value;
-      const password = document.getElementById('password').value;
-      const message = document.getElementById('access-message');
-      const users = JSON.parse(localStorage.getItem('users') || '{}');
+  const email = document.getElementById('login').value;
+  const password = document.getElementById('password').value;
+  const message = document.getElementById('access-message');
 
-      if (users[login] === password) {
-        message.innerText = "ACCESS GRANTED";
-        message.style.color = "lime";
-        setTimeout(() => {
-          document.getElementById('main').style.display = 'none';
-          document.getElementById('dashboard').style.display = 'block';
-          document.getElementById('welcome').innerText = `Welcome, ${login}`;
-          loadPosts();
-        }, 1000);
-      } else {
-        message.innerText = "ACCESS DENIED";
-        message.style.color = "red";
-        glitchEffect();
-      }
-    }
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      message.innerText = "ACCESS GRANTED";
+      message.style.color = "lime";
+      setTimeout(() => {
+        document.getElementById('main').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        document.getElementById('welcome').innerText = `Welcome, ${email}`;
+        loadPosts();
+      }, 1000);
+    })
+    .catch((error) => {
+      message.innerText = "ACCESS DENIED: " + error.message;
+      message.style.color = "red";
+      glitchEffect();
+    });
+}
 
-    function logout() {
-      document.getElementById('dashboard').style.display = 'none';
-      document.getElementById('main').style.display = 'flex';
-      document.getElementById('form').style.display = 'flex';
-    }
+function logout() {
+  firebase.auth().signOut().then(() => {
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('main').style.display = 'flex';
+    document.getElementById('form').style.display = 'flex';
+  });
+}
 
     function addPost() {
       const text = document.getElementById('post-text').value.trim();
