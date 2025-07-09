@@ -571,6 +571,23 @@ function changePassword() {
       }
     });
 }
+    firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    
+    document.getElementById('main').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+
+    const uid = user.uid;
+    const email = user.email;
+
+    db.ref('users/' + uid).once('value').then(snapshot => {
+      const displayName = snapshot.val()?.displayName || email;
+      document.getElementById('welcome').innerText = `Welcome, ${displayName}`;
+      loadPosts();
+    });
+  }
+});
+
   </script>
 </body>
 </html>
